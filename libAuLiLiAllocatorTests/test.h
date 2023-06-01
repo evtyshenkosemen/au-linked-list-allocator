@@ -4,6 +4,6 @@
 #include "../libAuLiLiAllocator/bin/autoconf.h"
 
 #define VERBOSE 0
-
+#define TEST_LINKED_LIST_SIZE 10
 
 #endif /* TEST_H */
