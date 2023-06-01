@@ -15,17 +15,20 @@
 	/* Counts the number of items in a list.
 	 */
 int count_list_items(const list_t *head) {
-	if (head->next) {
-		return count_list_items(head->next) + 1;
-	} else {
-		return 1;
+	int size = 0; /* replace recursive mechanism which can cause a stack overflow & gives incorrect sizes */
+	while (head->next)
+	{
+		head = head->next;
+		size++;
 	}
+
+	return size;
 }
 
     /* Inserts a new list item after the one specified as the argument.
 	 */
 void insert_next_to_list(list_t *item, int data) {
-	(item->next = malloc(sizeof(list_t)))->next = item->next;
+	(item->next = malloc(sizeof(list_t)))->next = NULL; /* add NULL-terminator to the end of the list */
 	item->next->data = data;
 }
 
