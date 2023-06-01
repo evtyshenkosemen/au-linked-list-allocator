@@ -35,10 +35,13 @@ void insert_next_to_list(list_t *item, int data) {
     /* Removes an item following the one specificed as the argument.
 	 */
 void remove_next_from_list(list_t *item) {
-	 if (item->next) {
-		free(item->next);
-        item->next = item->next->next;
-     }
+	list_t * new_next_PTR; 
+
+	if (item->next) {
+		new_next_PTR = item->next->next;
+		free(item->next); 
+		item->next = new_next_PTR;
+	} /* else no next block (just ignore) */
 }
 
 	/* Returns item data as text.
