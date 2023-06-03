@@ -46,10 +46,7 @@ void remove_next_from_list(list_t *item) {
 
 	/* Returns item data as text.
 	 */
-char *item_data(const list_t *list)
+void item_data(const list_t *list, char *buf)
 {
-	char buf[12];
-
 	sprintf(buf, "%d", list->data);
-	return buf;
 }
