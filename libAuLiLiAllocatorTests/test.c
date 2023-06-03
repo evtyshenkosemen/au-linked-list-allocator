@@ -11,7 +11,7 @@ int test_alloc_single_thread(){
 		I am a "professional" and ... have no time :)
 	 */
 
-	list_t   list_one;
+	list_t   list_one = {NULL, 0};
 	list_t * list_one_PTR;
 
 	printf("  [alloc_single_thread] Start\n");
