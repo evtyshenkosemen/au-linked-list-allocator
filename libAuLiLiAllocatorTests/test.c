@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <memory.h>
 #include "test.h"
 
 	/* Tests 
@@ -13,6 +14,8 @@ int test_alloc_single_thread(){
 
 	list_t   list_one = {NULL, 0};
 	list_t * list_one_PTR;
+	char buf[SPRINTF_BUFF_SIZE] = {'\0'};
+	char valid_buf[SPRINTF_BUFF_SIZE] = {'\0'};
 
 	printf("  [alloc_single_thread] Start\n");
 
@@ -20,7 +23,7 @@ int test_alloc_single_thread(){
 	list_one_PTR = &list_one; /* point to start of list */
 	/* empty check */
 
-	printf("   test insert_next_to_list / count_list_items \n");
+	printf("   test count_list_items() / insert_next_to_list() \n");
 	assert(count_list_items(list_one_PTR) == 0);
 
 	
@@ -52,7 +55,7 @@ int test_alloc_single_thread(){
 	printf("                                           Done!\n");
 
 
-	printf("   test free & count_list_items correct\n");
+	printf("   test remove_next_from_list() & count_list_items()\n");
 	list_one_PTR = &list_one; /* point to start of list */
 	for (size_t i = 0; i < TEST_LINKED_LIST_SIZE; i++)
 	{
@@ -62,6 +65,43 @@ int test_alloc_single_thread(){
 
 		if(VERBOSE) printf("         [i=%d]testing for curr list size equals %d\n",i, TEST_LINKED_LIST_SIZE - i - 1);
 		assert( count_list_items(&list_one) == TEST_LINKED_LIST_SIZE - i - 1 );
+	}
+	printf("                                           Done!\n");
+
+	if(VERBOSE) printf("         check for list empty\n");
+	assert(count_list_items(list_one_PTR) == 0);
+
+	printf("   test item_data()\n");
+	list_one_PTR = &list_one; /* point to start of list */
+	if(VERBOSE) printf("         writing data\n");
+	for (size_t i = 0; i < 256; i++)
+	{
+		if(VERBOSE) printf("         [i=%d]trying insert 0x%x [PTR=0x%x] \n",i,i, list_one_PTR);
+		insert_next_to_list(list_one_PTR, i); /* insert test val */
+
+		
+		if(VERBOSE) printf("         [i=%d]count_list_items returns %d\n",i, count_list_items(&list_one));
+
+		/* test count growth  */
+		assert(count_list_items(&list_one) == i+1);
+
+		/* user must keep last pointer to the list */
+		list_one_PTR = list_one_PTR->next;
+	}
+
+	if(VERBOSE) printf("         checking data\n");
+	list_one_PTR = &list_one; /* point to start of list */
+	for (size_t i = 0; i < 256; i++)
+	{
+		/* skip 1st empty cell */
+		list_one_PTR = list_one_PTR->next;
+
+		memset(valid_buf, '\0', SPRINTF_BUFF_SIZE); /* flush valid buff cause we comparing raw bytes not strings */
+		sprintf(valid_buf, "%d", i); /* generate valid value */
+		item_data(list_one_PTR, buf); /* getting data via testing func */
+
+		if(VERBOSE) printf("         [i=%d]compare valid %s with %s\n",i,valid_buf, buf);
+		assert(memcmp(valid_buf, buf, SPRINTF_BUFF_SIZE) == 0);
 	}
 	printf("                                           Done!\n");
 
