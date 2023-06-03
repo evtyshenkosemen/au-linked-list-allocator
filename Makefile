@@ -1,7 +1,10 @@
-all: build tests
+all: restore_env build tests
 
-tests:
+restore_env:
+	./restore_env.sh
+
+tests: restore_env
 	cd ./libAuLiLiAllocatorTests && make all
 
-build:
+build: restore_env
 	cd ./libAuLiLiAllocator && make all
